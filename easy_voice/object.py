@@ -4,6 +4,7 @@ from easy_voice.logic.play import play
 from easy_voice.logic.add import add
 from easy_voice.logic.queue import queue
 from easy_voice.logic.skip import skip
+from easy_voice.logic.clear_bot_data import clear_bot_data
 
 class Kuzmich:
     def __init__(self):
@@ -20,3 +21,6 @@ class Kuzmich:
 
     async def skip(self, ctx):
         await skip(self, ctx)
+
+    async def clear_bot_data(self, ctx):
+        await clear_bot_data(self, ctx)

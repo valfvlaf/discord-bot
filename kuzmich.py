@@ -1,8 +1,7 @@
 from discord.ext import commands
-
 from easy_voice import object
 
-token = "MTA5ODY4NDc2MzcxMzMxNDk0OA.GIRcLc.rsYvAKGe4TIysa1F4pcbp-ZZeP5Hu12eRC7Md8"
+token = "MTA5ODY4NDc2MzcxMzMxNDk0OA.GWZkQY.G57b2s7bjowYgr2aeo9ZJiWI9M-9JFH3hwaqCc"
 
 Kuzmich = object.Kuzmich()
 
@@ -21,13 +20,13 @@ async def k(ctx, command=None, *args):
         'play': Kuzmich.play,
         'add': Kuzmich.add,
         'queue': Kuzmich.queue,
-        'skip': Kuzmich.skip
+        'skip': Kuzmich.skip,
+        'clear_bot_data': Kuzmich.clear_bot_data
     }
     if command not in commands:
         await ctx.send('Invalid command.')
         return
     await commands[command](ctx, *args)
-
 
 @Kuzmich.bot.event
 async def on_command_error(ctx, error):

@@ -20,17 +20,19 @@ async def add(self, ctx, url):
                 await message.edit(content=f'Download progress: {percent}%')
         await message.edit(content=f'{url} has been downloaded.')
 
-        with open('queue.json', 'r+') as f:
-            data = json.load(f)
-            voice_channel_id = str(ctx.author.voice.channel.id)
-            file_name = url[24:] + '.mp3'
-            if voice_channel_id in data:
-                data[voice_channel_id].append(file_name)
-            else:
-                data[voice_channel_id] = [file_name]
-            f.seek(0)
-            json.dump(data, f, indent=4)
-            f.truncate()
+    with open('queue.json', 'r') as f:
+        data = json.load(f)
+    voice_channel_id = str(ctx.author.voice.channel.id)
+    file_name = url[24:] + '.mp3'
+    if voice_channel_id in data:
+        data[voice_channel_id].append(file_name)
+    else:
+        data[voice_channel_id] = [file_name]
+    with open('queue.json', 'w') as f:
+        json.dump(data, f, indent=4)
+
+
+
 
 def download(url, destination):
     cmd = f'yt-dlp -x -o "{destination}.mp3" --audio-format mp3 {url}'
@@ -38,5 +40,4 @@ def download(url, destination):
     return process
 
 def get_download_progress(url):
-    # logic to get download progress
-    return 50 # just for demonstration purposes
+        return 0
