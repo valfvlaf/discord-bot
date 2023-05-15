@@ -1,7 +1,10 @@
+from install_dependencies import install_dependencies
+install_dependencies()
+
 from discord.ext import commands
 from easy_voice import object
 
-token = "MTA5ODY4NDc2MzcxMzMxNDk0OA.GWZkQY.G57b2s7bjowYgr2aeo9ZJiWI9M-9JFH3hwaqCc"
+token = "MTA5ODY4NDc2MzcxMzMxNDk0OA.GoJ7iz.jPn2Uj5e9G3j0GRYF8X94Qw-2Ud4XI4PS7ojnE"
 
 Kuzmich = object.Kuzmich()
 

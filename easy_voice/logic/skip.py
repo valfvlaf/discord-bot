@@ -1,6 +1,7 @@
 from discord.utils import get
 
 async def skip(kuzmich, ctx):
+    await ctx.message.delete()
     voice_client = get(kuzmich.bot.voice_clients, guild=ctx.guild)
 
     if voice_client and voice_client.is_playing():

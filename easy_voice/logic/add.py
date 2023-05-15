@@ -1,29 +1,25 @@
 import os
 import json
 import subprocess
-import asyncio
+import logging
+import re
+
+logging.basicConfig(filename='output.log', level=logging.DEBUG)
 
 async def add(self, ctx, url):
-    message = await ctx.send(f'Received command to add {url} to the queue.')
-
+    await ctx.message.delete()
+    message = await ctx.send(f'Received command to add {get_video_title(url)} to the queue.')
     if os.path.isfile("music/" + url[24:] + '.mp3'):
-        await message.edit(content=f'Successfully added {url}.mp3 to the download queue.')
+        await message.edit(content=f'Successfully added {get_video_title(url)}.mp3 to the download queue.')
     else:
-        await message.edit(content=f'Starting download of {url}...')
-        process = download(url, 'music/' + url[24:])
-        percent = 0
-        while process.poll() is None:
-            await asyncio.sleep(1)
-            new_percent = get_download_progress(url)
-            if new_percent > percent:
-                percent = new_percent
-                await message.edit(content=f'Download progress: {percent}%')
-        await message.edit(content=f'{url} has been downloaded.')
+        await message.edit(content=f'Starting download of {get_video_title(url)}...')
+        await download(url, 'music/' + get_video_title(url), message)
+        await message.edit(content=f'{get_video_title(url)} has been downloaded.')
 
     with open('queue.json', 'r') as f:
         data = json.load(f)
     voice_channel_id = str(ctx.author.voice.channel.id)
-    file_name = url[24:] + '.mp3'
+    file_name = get_video_title(url) + '.mp3'
     if voice_channel_id in data:
         data[voice_channel_id].append(file_name)
     else:
@@ -31,13 +27,20 @@ async def add(self, ctx, url):
     with open('queue.json', 'w') as f:
         json.dump(data, f, indent=4)
 
+def get_video_title(url):
+    cmd = f'yt-dlp --dump-json {url}'
+    output = subprocess.check_output(cmd, shell=True).decode('utf-8')
+    info = json.loads(output)
+    return info['title']
 
-
-
-def download(url, destination):
+async def download(url, destination, message):
     cmd = f'yt-dlp -x -o "{destination}.mp3" --audio-format mp3 {url}'
-    process = subprocess.Popen(cmd, shell=True)
+    with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                          universal_newlines=True) as process:
+        with open("output.log", "w") as log:#проклято
+            for line in process.stdout:
+                log.write(line)
+                match = re.search(r'(\d+(\.\d+)?)%', line)#да простит меня Аллах
+                if match:
+                    await message.edit(content=f'Download progress: {match.group(1)}%')
     return process
-
-def get_download_progress(url):
-        return 0

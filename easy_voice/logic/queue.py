@@ -1,6 +1,7 @@
 import json
 
 async def queue(self, ctx):
+    await ctx.message.delete()
     voice_channel_id = str(ctx.author.voice.channel.id)
     with open('queue.json', 'r') as f:
         data = json.load(f)

@@ -3,6 +3,7 @@ import json
 import asyncio
 
 async def play(self, ctx):
+    await ctx.message.delete()
     with open('queue.json', 'r') as f:
         data = json.load(f)
     ID = str(ctx.author.voice.channel.id)
